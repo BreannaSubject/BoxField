@@ -12,6 +12,7 @@ namespace BoxField
     {
         public Color colour;
         public int size, x, y;
+       
 
         public Box(int _x, int _y, int _size, Color _colour)
         {
@@ -31,8 +32,20 @@ namespace BoxField
 
 
         public void Move(int speed)
-        {
+        { 
             y += speed;
+           
+        }
+        public void Move(int speed, Boolean direction)
+        {
+           if (direction)
+            {
+                x += speed;
+            }
+            else
+            {
+                x -= speed;
+            }
 
         }
 
