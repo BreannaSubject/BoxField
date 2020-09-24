@@ -17,13 +17,26 @@ namespace BoxField
 
         //used to draw boxes on screen
         SolidBrush boxBrush = new SolidBrush(Color.White);
+        Random random = new Random();
+        Color colour = Color.White;
+        int red, green, blue;
         
-        //TODO - create a list to hold a column of boxes        
+       
+
+        List<Box> left = new List<Box>();
+        List<Box> right = new List<Box>();
+
+        Box hero;
+        int heroSpeed = 10;
+        int heroSize = 30;
+
+        
 
 
         public GameScreen()
         {
             InitializeComponent();
+            OnStart();
         }
 
         /// <summary>
@@ -31,7 +44,23 @@ namespace BoxField
         /// </summary>
         public void OnStart()
         {
-            //TODO - set game start values
+            //set game start values
+            
+            
+            Box leftBox = new Box(50, 0, 20, colour);
+            Box rightBox = new Box(840, 0, 20, colour);
+            left.Add(leftBox);
+            right.Add(rightBox);
+
+            hero = new Box(this.Width / 2 - heroSize / 2, 400, heroSize);
+
+            red = random.Next(1, 255);
+            green = random.Next(1, 255);
+            blue = random.Next(1, 255);
+            colour = Color.FromArgb(red, green, blue);
+
+
+
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -64,18 +93,79 @@ namespace BoxField
 
         private void gameLoop_Tick(object sender, EventArgs e)
         {
-            //TODO - update location of all boxes (drop down screen)
+            
+            
+         
+
+            //update location of all boxes (drop down screen)
+            foreach (Box b in left)
+            {
+                b.Move(5);
+            }
+
+            foreach (Box b in right)
+            {
+                b.Move(5);
+            }
 
             //TODO - remove box if it has gone of screen
+            if (left [0].y > 500)
+            {
+                left.RemoveAt(0);
+            }
+            
+            if (right [0].y > 500)
+            {
+                right.RemoveAt(0);
+            }
 
-            //TODO - add new box if it is time
+            //add new box if it is time
+            if (left[left.Count - 1].y > 21)
+            {
+                Box leftBox = new Box(50, 0, 20, colour);
+                left.Add(leftBox);
+                red = random.Next(1, 255);
+                green = random.Next(1, 255);
+                blue = random.Next(1, 255);
+                colour = Color.FromArgb(red, green, blue);
+
+            }
+
+            if (right[right.Count - 1].y > 21)
+            {
+                Box rightBox = new Box(840, 0, 20, colour);
+                right.Add(rightBox);
+                red = random.Next(1, 255);
+                green = random.Next(1, 255);
+                blue = random.Next(1, 255);
+                colour = Color.FromArgb(red, green, blue);
+
+            }
+            
 
             Refresh();
         }
 
         private void GameScreen_Paint(object sender, PaintEventArgs e)
         {
-            //TODO - draw boxes to screen
+           
+            //draw boxes to screen
+            foreach (Box b in left)
+            {
+                boxBrush.Color = b.colour;
+                e.Graphics.FillRectangle(boxBrush, b.x, b.y, b.size, b.size); 
+            }
+
+            foreach (Box b in right)
+            {
+                boxBrush.Color = b.colour;
+                e.Graphics.FillRectangle(boxBrush, b.x, b.y, b.size, b.size);
+            }
+
+            boxBrush.Color = Color.White;
+            e.Graphics.FillRectangle(boxBrush, hero.x, hero.y, hero.size, hero.size);
+
+
         }
     }
 }
