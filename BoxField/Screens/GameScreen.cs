@@ -26,14 +26,12 @@ namespace BoxField
         int leftX = 250;
         int gap = 300;
         int patternLegth = 11;
+        int patternSpeed = 7; 
         Boolean patternDirection = true;
 
         Box hero;
         int heroSpeed = 10;
         int heroSize = 30;
-
-        
-
 
         public GameScreen()
         {
@@ -100,17 +98,21 @@ namespace BoxField
                 {
                     patternDirection = true;
                 }
-                
-                patternLegth = random.Next (2, 20);
+
+                patternLegth = random.Next(2, 20);
+                patternSpeed = random.Next(2, 20);
             }
-            if (patternDirection == true)
+
+            if (patternDirection == true && leftX + gap < this.Width - 50)
             {
-                leftX += 9;
+                leftX += patternSpeed;
             }
-            else 
+            else if (patternDirection == false && leftX > 50) 
             {
-                leftX -= 9;
+                leftX -= patternSpeed;
             }
+
+
             Box leftBox = new Box(leftX, 0, 20, colour);
             left.Add(leftBox);
             Box rightBox = new Box(leftX + gap, 0, 20, colour);
@@ -163,6 +165,34 @@ namespace BoxField
                 MakeBox();
       
             }
+
+            if (leftArrowDown == true)
+            {
+                hero.Move(heroSpeed, false);
+            }
+            else if (rightArrowDown == true)
+            {
+                hero.Move(heroSpeed, true);
+            }
+
+            //check for collistion
+            Rectangle heroRec = new Rectangle(hero.x, hero.y, hero.size, hero.size);
+
+            if (left.Count >= 4)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    Rectangle boxRec = new Rectangle(left[i].x, left[i].y, left[i].size, left[i].size);
+                    Rectangle boxRec2 = new Rectangle(right[i].x, right[i].y, right[i].size, right[i].size);
+
+                    if (boxRec.IntersectsWith(heroRec) || boxRec2.IntersectsWith(heroRec))
+                    {
+                        gameLoop.Enabled = false;
+                    }
+                }
+            }
+            
+            
             
 
             Refresh();
